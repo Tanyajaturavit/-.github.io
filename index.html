@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>บันทึกการแยกขยะ</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      max-width: 480px;
+      margin: auto;
+      background-color: #f5f5f5;
+    }
+    h2 {
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    .trash-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      background: white;
+      padding: 10px;
+      border-radius: 12px;
+    }
+    .trash-icon {
+      font-size: 1.5em;
+      margin-right: 10px;
+    }
+    .counter {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .counter button {
+      width: 30px;
+      height: 30px;
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <h2>บันทึกการแยกขยะ</h2>
+  <form id="wasteForm">
+    <div class="form-group">
+      <label>ชื่อแม่บ้าน</label>
+      <input type="text" name="name" required>
+    </div>
+    <div class="form-group">
+      <label>แผนก</label>
+      <select name="department" required>
+        <option value="">เลือกแผนก</option>
+        <option>อายุรกรรม</option>
+        <option>ศัลยกรรม</option>
+        <option>แผนกฉุกเฉิน</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>ประเภทขยะ (จำนวนถุง)</label>
+
+      <div class="trash-group">
+        <span class="trash-icon">🔴</span> ขยะติดเชื้อ
+        <div class="counter">
+          <button type="button" onclick="changeCount('infectious', -1)">-</button>
+          <span id="infectious-count">0</span>
+          <button type="button" onclick="changeCount('infectious', 1)">+</button>
+        </div>
+      </div>
+
+      <div class="trash-group">
+        <span class="trash-icon">🟡</span> ขยะอันตราย
+        <div class="counter">
+          <button type="button" onclick="changeCount('hazardous', -1)">-</button>
+          <span id="hazardous-count">0</span>
+          <button type="button" onclick="changeCount('hazardous', 1)">+</button>
+        </div>
+      </div>
+
+      <div class="trash-group">
+        <span class="trash-icon">⚪</span> ขยะทั่วไป
+        <div class="counter">
+          <button type="button" onclick="changeCount('general', -1)">-</button>
+          <span id="general-count">0</span>
+          <button type="button" onclick="changeCount('general', 1)">+</button>
+        </div>
+      </div>
+
+      <div class="trash-group">
+        <span class="trash-icon">♻️</span> ขยะรีไซเคิล
+        <div class="counter">
+          <button type="button" onclick="changeCount('recycle', -1)">-</button>
+          <span id="recycle-count">0</span>
+          <button type="button" onclick="changeCount('recycle', 1)">+</button>
+        </div>
+      </div>
+    </div>
+
+    <input type="hidden" name="infectious">
+    <input type="hidden" name="hazardous">
+    <input type="hidden" name="general">
+    <input type="hidden" name="recycle">
+
+    <button type="submit">ส่งข้อมูล</button>
+  </form>
+
+  <script>
+    const counters = {
+      infectious: 0,
+      hazardous: 0,
+      general: 0,
+      recycle: 0
+    };
+
+    function changeCount(type, amount) {
+      counters[type] = Math.max(0, counters[type] + amount);
+      document.getElementById(`${type}-count`).innerText = counters[type];
+      document.querySelector(`input[name="${type}"]`).value = counters[type];
+    }
+
+    const form = document.getElementById('wasteForm');
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('บันทึกข้อมูลเรียบร้อยแล้ว!');
+      form.reset();
+      Object.keys(counters).forEach(type => {
+        counters[type] = 0;
+        document.getElementById(`${type}-count`).innerText = '0';
+      });
+    });
+  </script>
+</body>
+</html>
